@@ -1,23 +1,48 @@
 from rest_framework import serializers
+from .models import User, Team, Activity, Leaderboard, Workout
+from bson import ObjectId
 
-# Define serializers for users, teams, activity, leaderboard, and workouts
-class UserSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    name = serializers.CharField(max_length=100)
+class ObjectIdField(serializers.Field):
+    def to_representation(self, value):
+        return str(value)
 
-class TeamSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
-    members = serializers.ListField(child=serializers.EmailField())
+    def to_internal_value(self, data):
+        return ObjectId(data)
 
-class ActivitySerializer(serializers.Serializer):
-    user = serializers.EmailField()
-    type = serializers.CharField(max_length=50)
-    duration = serializers.IntegerField()
+class UserSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField()
 
-class LeaderboardSerializer(serializers.Serializer):
-    team = serializers.CharField(max_length=100)
-    score = serializers.IntegerField()
+    class Meta:
+        model = User
+        fields = '__all__'
 
-class WorkoutSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
-    description = serializers.CharField()
+class TeamSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField()
+    members = UserSerializer(many=True)
+
+    class Meta:
+        model = Team
+        fields = '__all__'
+
+class ActivitySerializer(serializers.ModelSerializer):
+    _id = ObjectIdField()
+    user = ObjectIdField()
+
+    class Meta:
+        model = Activity
+        fields = '__all__'
+
+class LeaderboardSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField()
+    user = UserSerializer()  # Expand the user object
+
+    class Meta:
+        model = Leaderboard
+        fields = '__all__'
+
+class WorkoutSerializer(serializers.ModelSerializer):
+    _id = ObjectIdField()
+
+    class Meta:
+        model = Workout
+        fields = '__all__'
