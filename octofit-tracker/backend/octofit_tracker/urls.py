@@ -18,16 +18,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import (
-    api_root,
-    UserViewSet,
-    TeamViewSet,
-    ActivityViewSet,
-    LeaderboardViewSet,
-    WorkoutViewSet,
-)
+from .views import UserViewSet, TeamViewSet, ActivityViewSet, LeaderboardViewSet, WorkoutViewSet, api_root
 
-# Define API root and specific routes for models
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'teams', TeamViewSet)
@@ -37,6 +29,6 @@ router.register(r'workouts', WorkoutViewSet)
 
 urlpatterns = [
     path('', api_root, name='api-root'),  # Root endpoint
-    path("admin/", admin.site.urls),  # Admin endpoint
+    path('admin/', admin.site.urls),  # Admin endpoint
     path('api/', include(router.urls)),  # API endpoint
 ]
