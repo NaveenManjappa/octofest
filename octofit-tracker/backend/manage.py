@@ -3,6 +3,12 @@
 import os
 import sys
 
+try:
+    import rest_framework
+    print("rest_framework imported successfully")
+except ImportError as e:
+    print("Error importing rest_framework:", e)
+
 
 def main():
     """Run administrative tasks."""
